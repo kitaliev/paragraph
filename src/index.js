@@ -46,7 +46,6 @@ class Paragraph {
   constructor({data, config, api, readOnly}) {
     this.api = api;
     this.readOnly = readOnly;
-
     this._CSS = {
       block: this.api.styles.block,
       wrapper: 'ce-paragraph'
@@ -122,11 +121,9 @@ class Paragraph {
    * @public
    */
   merge(data) {
-    let newData = {
-      text : this.data.text + data.text
+    this.data = {
+      text: this.data.text + data.text
     };
-
-    this.data = newData;
   }
 
   /**
@@ -138,11 +135,7 @@ class Paragraph {
    * @public
    */
   validate(savedData) {
-    if (savedData.text.trim() === '' && !this._preserveBlank) {
-      return false;
-    }
-
-    return true;
+    return !(savedData.text.trim() === '' && !this._preserveBlank);
   }
 
   /**
@@ -163,11 +156,9 @@ class Paragraph {
    * @param {PasteEvent} event - event with pasted data
    */
   onPaste(event) {
-    const data = {
+    this.data = {
       text: event.detail.data.innerHTML
     };
-
-    this.data = data;
   }
 
   /**
@@ -187,6 +178,8 @@ class Paragraph {
     return {
       text: {
         br: true,
+        span: true,
+        sup: true,
       }
     };
   }
@@ -206,9 +199,7 @@ class Paragraph {
    * @private
    */
   get data() {
-    let text = this._element.innerHTML;
-
-    this._data.text = text;
+    this._data.text = this._element.innerHTML;
 
     return this._data;
   }
